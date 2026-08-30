@@ -1,21 +1,21 @@
-// Modules that go to Maven Central. lightbatis-spring-sample is the fourth and
+// Modules that go to Maven Central. larkbatis-spring-sample is the fourth and
 // stays out: it exists to prove the other three work inside a real Boot context
 // on H2, and publishing it would put H2 into a consumer's dependency graph.
 val publishedProjects = listOf(
-    "lightbatis-spring",
-    "lightbatis-spring-boot-autoconfigure",
-    "lightbatis-spring-boot-starter",
+    "larkbatis-spring",
+    "larkbatis-spring-boot-autoconfigure",
+    "larkbatis-spring-boot-starter",
 )
 
 subprojects {
     apply(plugin = "java-library")
 
-    group = "io.github.lightbatis"
+    group = "io.github.larkbatis"
     version = rootProject.version
 
     repositories {
         mavenCentral()
-        // Between releases `lightbatisVersion` is a -SNAPSHOT, and Portal
+        // Between releases `larkbatisVersion` is a -SNAPSHOT, and Portal
         // snapshots do not live on Central proper. Narrowed to the one group
         // and to snapshots so no other dependency can resolve through it; a
         // local checkout of the core repo bypasses this entirely, because the
@@ -24,7 +24,7 @@ subprojects {
             name = "centralSnapshots"
             url = uri("https://central.sonatype.com/repository/maven-snapshots/")
             mavenContent { snapshotsOnly() }
-            content { includeGroup("io.github.lightbatis") }
+            content { includeGroup("io.github.larkbatis") }
         }
     }
 
@@ -78,7 +78,7 @@ configure(publishedProjects.map { project(":$it") }) {
                 pom {
                     name = project.name
                     description = provider { project.description }
-                    url = "https://github.com/lightbatis/lightbatis-spring"
+                    url = "https://github.com/larkbatis/larkbatis-spring"
                     inceptionYear = "2026"
                     licenses {
                         license {
@@ -89,19 +89,19 @@ configure(publishedProjects.map { project(":$it") }) {
                     }
                     developers {
                         developer {
-                            id = "lightbatis"
-                            name = "LightBatis contributors"
-                            url = "https://github.com/lightbatis"
+                            id = "larkbatis"
+                            name = "LarkBatis contributors"
+                            url = "https://github.com/larkbatis"
                         }
                     }
                     scm {
-                        connection = "scm:git:https://github.com/lightbatis/lightbatis-spring.git"
-                        developerConnection = "scm:git:ssh://git@github.com/lightbatis/lightbatis-spring.git"
-                        url = "https://github.com/lightbatis/lightbatis-spring"
+                        connection = "scm:git:https://github.com/larkbatis/larkbatis-spring.git"
+                        developerConnection = "scm:git:ssh://git@github.com/larkbatis/larkbatis-spring.git"
+                        url = "https://github.com/larkbatis/larkbatis-spring"
                     }
                     issueManagement {
                         system = "GitHub Issues"
-                        url = "https://github.com/lightbatis/lightbatis-spring/issues"
+                        url = "https://github.com/larkbatis/larkbatis-spring/issues"
                     }
                 }
             }

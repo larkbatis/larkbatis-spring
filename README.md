@@ -1,6 +1,6 @@
-# lightbatis-spring
+# larkbatis-spring
 
-Spring / Spring Boot integration for LightBatis.
+Spring / Spring Boot integration for LarkBatis.
 
 Half of `mybatis-spring` evaporates here, and knowing which half decides what this
 repo contains. `mybatis-spring` exists to solve exactly two problems:
@@ -19,28 +19,28 @@ this repo's whole content.
 
 | Module | Role |
 |---|---|
-| [`lightbatis-spring`](lightbatis-spring/README.md) | `SpringLightBatisSession` — Connections via `DataSourceUtils`, exception translation via `SQLExceptionTranslator` |
-| [`lightbatis-spring-boot-autoconfigure`](lightbatis-spring-boot-autoconfigure/README.md) | `LightBatisAutoConfiguration`, `LightBatisProperties`, `AutoConfiguration.imports` |
-| [`lightbatis-spring-boot-starter`](lightbatis-spring-boot-starter/README.md) | Empty — dependencies only |
-| [`lightbatis-spring-sample`](lightbatis-spring-sample/README.md) | Not published: a real Boot context on H2 that proves the claims above |
+| [`larkbatis-spring`](larkbatis-spring/README.md) | `SpringLarkBatisSession` — Connections via `DataSourceUtils`, exception translation via `SQLExceptionTranslator` |
+| [`larkbatis-spring-boot-autoconfigure`](larkbatis-spring-boot-autoconfigure/README.md) | `LarkBatisAutoConfiguration`, `LarkBatisProperties`, `AutoConfiguration.imports` |
+| [`larkbatis-spring-boot-starter`](larkbatis-spring-boot-starter/README.md) | Empty — dependencies only |
+| [`larkbatis-spring-sample`](larkbatis-spring-sample/README.md) | Not published: a real Boot context on H2 that proves the claims above |
 
 ## Using it
 
 ```kotlin
 dependencies {
-    implementation("io.github.lightbatis:lightbatis-annotations:0.1.0-SNAPSHOT")
-    implementation("io.github.lightbatis:lightbatis-spring-boot-starter:0.1.0-SNAPSHOT")
-    annotationProcessor("io.github.lightbatis:lightbatis-processor:0.1.0-SNAPSHOT")
+    implementation("io.github.larkbatis:larkbatis-annotations:0.1.0-SNAPSHOT")
+    implementation("io.github.larkbatis:larkbatis-spring-boot-starter:0.1.0-SNAPSHOT")
+    annotationProcessor("io.github.larkbatis:larkbatis-processor:0.1.0-SNAPSHOT")
 }
 ```
 
 That is the whole setup. There is no `@MapperScan`, no `SqlSessionFactoryBean`, no
 `SqlSessionTemplate`:
 
-- the processor emits `LightBatisMapperConfiguration` into your base package as soon as
+- the processor emits `LarkBatisMapperConfiguration` into your base package as soon as
   it sees spring-context on the build classpath, so `@SpringBootApplication`'s default
   `@ComponentScan` picks it up;
-- the auto-configuration supplies the single `LightBatisSession` those `@Bean` methods
+- the auto-configuration supplies the single `LarkBatisSession` those `@Bean` methods
   ask for.
 
 Inject mappers as beans and call them from `@Transactional` services.
@@ -48,8 +48,8 @@ Inject mappers as beans and call them from `@Transactional` services.
 ### Properties
 
 ```yaml
-lightbatis:
-  max-sql-variants: 64            # distinct SQL texts per statement before LightBatis complains
+larkbatis:
+  max-sql-variants: 64            # distinct SQL texts per statement before LarkBatis complains
   fail-on-unbounded-fragment: false  # true = throw instead of one warning (good in staging)
 ```
 
@@ -60,16 +60,16 @@ a fragment whose value set is not bounded grows them without limit.
 
 | Situation | What to do |
 |---|---|
-| Mappers outside the scanned packages | `-Alightbatis.springConfigPackage=com.example.app`, or `@Import(LightBatisMapperConfiguration.class)` |
-| You want to declare the mapper beans yourself | `-Alightbatis.springConfig=false` |
-| More than one `DataSource` | Declare one `SpringLightBatisSession` per `DataSource` and write the mapper `@Bean` methods yourself. `@ConditionalOnSingleCandidate` makes the auto-configuration back off entirely rather than guess, and the generated `@Configuration` takes a single `LightBatisSession` — mark one `@Primary`, or suppress the class with the option above. Per-mapper `DataSource` selection is **deferred**, per build plan M4: no design without a real service that needs it |
+| Mappers outside the scanned packages | `-Alarkbatis.springConfigPackage=com.example.app`, or `@Import(LarkBatisMapperConfiguration.class)` |
+| You want to declare the mapper beans yourself | `-Alarkbatis.springConfig=false` |
+| More than one `DataSource` | Declare one `SpringLarkBatisSession` per `DataSource` and write the mapper `@Bean` methods yourself. `@ConditionalOnSingleCandidate` makes the auto-configuration back off entirely rather than guess, and the generated `@Configuration` takes a single `LarkBatisSession` — mark one `@Primary`, or suppress the class with the option above. Per-mapper `DataSource` selection is **deferred**, per build plan M4: no design without a real service that needs it |
 
 ## What runs and what does not
 
 | Scenario | | Why |
 |---|---|---|
 | `@Transactional` on a service, mapper called inside | works | `DataSourceUtils` returns the connection bound to the transaction |
-| `REQUIRES_NEW`, `NESTED`, rollback rules | works | Spring handles all of it; LightBatis only asks for a connection |
+| `REQUIRES_NEW`, `NESTED`, rollback rules | works | Spring handles all of it; LarkBatis only asks for a connection |
 | `readOnly = true` | works | Spring sets the flag on that connection |
 | Mapper called outside any transaction | works | Auto-commit; `releaseConnection` closes it immediately |
 | A `Stream`-returning mapper method | works | The stream holds a pooled Connection until closed; inside a transaction `release` is a no-op and the transaction keeps it. `try (Stream<T> rows = ...)` either way |
@@ -79,7 +79,7 @@ a fragment whose value set is not bounded grows them without limit.
 
 ## Spring AOT and native image
 
-`@Bean AccountMapper accountMapper(LightBatisSession s)` has a static return type, so AOT
+`@Bean AccountMapper accountMapper(LarkBatisSession s)` has a static return type, so AOT
 treats it like any other bean: no `getObjectType()` at runtime, no proxy hint, no
 `reflect-config.json` for the mapper layer. `MapperFactoryBean` is the opposite case —
 the bean type is only known at runtime and what it returns is a JDK proxy.
@@ -100,12 +100,12 @@ One jar works on both, and that took one deliberate decision. Boot 4 moved
 | `@AutoConfiguration`, `@ConditionalOn*` | `org.springframework.boot.autoconfigure(.condition)` | unchanged |
 | `@ConfigurationProperties` | `org.springframework.boot.context.properties` | unchanged |
 
-So `LightBatisAutoConfiguration` declares its ordering with `afterName` and
+So `LarkBatisAutoConfiguration` declares its ordering with `afterName` and
 lists **both** package names. This is not style. A `after =
 DataSourceAutoConfiguration.class` compiled against Boot 3 cannot be resolved
 on Boot 4, and Spring's response is to drop the whole auto-configuration from
 the candidate list — no bean, no warning, and nothing goes wrong until
-something asks for a `LightBatisSession` and the context fails to start. A name
+something asks for a `LarkBatisSession` and the context fails to start. A name
 that matches nothing is simply ignored, which is what makes listing both safe.
 
 Verified by migrating a real Boot 4.1 service; a test asserts both names are
@@ -122,9 +122,9 @@ p6spy) until there is a reason to change that.
 ## Building
 
 `./gradlew build` (JDK 17 via toolchain). `settings.gradle.kts` already has
-`includeBuild("../lightbatis")`, so local changes to the core repo are picked up without
+`includeBuild("../larkbatis")`, so local changes to the core repo are picked up without
 publishing.
 
 All three published modules carry a real JPMS descriptor:
-`io.github.lightbatis.spring`, `io.github.lightbatis.spring.boot`,
-`io.github.lightbatis.spring.boot.starter`.
+`io.github.larkbatis.spring`, `io.github.larkbatis.spring.boot`,
+`io.github.larkbatis.spring.boot.starter`.

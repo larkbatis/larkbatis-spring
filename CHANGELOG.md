@@ -1,6 +1,6 @@
 # Changelog
 
-Notable changes to the LightBatis Spring integration. The format follows
+Notable changes to the LarkBatis Spring integration. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
@@ -16,9 +16,9 @@ First public release.
 
 ```kotlin
 dependencies {
-    implementation("io.github.lightbatis:lightbatis-annotations:0.1.0")
-    implementation("io.github.lightbatis:lightbatis-spring-boot-starter:0.1.0")
-    annotationProcessor("io.github.lightbatis:lightbatis-processor:0.1.0")
+    implementation("io.github.larkbatis:larkbatis-annotations:0.1.0")
+    implementation("io.github.larkbatis:larkbatis-spring-boot-starter:0.1.0")
+    annotationProcessor("io.github.larkbatis:larkbatis-processor:0.1.0")
 }
 ```
 
@@ -29,20 +29,20 @@ and no `SqlSessionTemplate`.
 
 | Coordinate | Role |
 |---|---|
-| `io.github.lightbatis:lightbatis-spring` | `SpringLightBatisSession` |
-| `io.github.lightbatis:lightbatis-spring-boot-autoconfigure` | `LightBatisAutoConfiguration`, `LightBatisProperties` |
-| `io.github.lightbatis:lightbatis-spring-boot-starter` | Empty — dependencies only |
+| `io.github.larkbatis:larkbatis-spring` | `SpringLarkBatisSession` |
+| `io.github.larkbatis:larkbatis-spring-boot-autoconfigure` | `LarkBatisAutoConfiguration`, `LarkBatisProperties` |
+| `io.github.larkbatis:larkbatis-spring-boot-starter` | Empty — dependencies only |
 
 ### Added
 
-- **`SpringLightBatisSession`** — connections through `DataSourceUtils`, never
+- **`SpringLarkBatisSession`** — connections through `DataSourceUtils`, never
   `dataSource.getConnection()`, so a mapper called inside `@Transactional` gets
   the connection bound to that transaction. Exceptions go through
   `SQLExceptionTranslator`. `REQUIRES_NEW`, `NESTED`, rollback rules and
-  `readOnly` all work, because Spring handles all of it and LightBatis only asks
+  `readOnly` all work, because Spring handles all of it and LarkBatis only asks
   for a connection. A transaction shared with `JdbcTemplate` or JPA works for the
   same reason.
-- **Auto-configuration** supplying the single `LightBatisSession` that the
+- **Auto-configuration** supplying the single `LarkBatisSession` that the
   generated `@Configuration` asks for, registered through
   `META-INF/spring/...AutoConfiguration.imports`. `@ConditionalOnSingleCandidate`
   makes it back off entirely rather than guess when there is more than one
@@ -50,8 +50,8 @@ and no `SqlSessionTemplate`.
 - **Properties:**
 
   ```yaml
-  lightbatis:
-    max-sql-variants: 64               # distinct SQL texts per statement before LightBatis complains
+  larkbatis:
+    max-sql-variants: 64               # distinct SQL texts per statement before LarkBatis complains
     fail-on-unbounded-fragment: false  # true = throw instead of warn (good in staging)
   ```
 
@@ -74,25 +74,25 @@ and no `SqlSessionTemplate`.
   to remove.
 - **One jar for Spring Boot 3 and Spring Boot 4.** Boot 4 moved
   `DataSourceAutoConfiguration` into `spring-boot-jdbc` and renamed its package,
-  so `LightBatisAutoConfiguration` declares its ordering with `afterName` and
+  so `LarkBatisAutoConfiguration` declares its ordering with `afterName` and
   lists *both* package names. A `after = DataSourceAutoConfiguration.class`
   compiled against Boot 3 cannot be resolved on Boot 4, and Spring's response is
   to drop the whole auto-configuration from the candidate list — no bean, no
-  warning, and nothing goes wrong until something asks for a `LightBatisSession`
+  warning, and nothing goes wrong until something asks for a `LarkBatisSession`
   and the context fails to start. A name that matches nothing is simply ignored,
   which is what makes listing both safe. Verified by migrating a real Boot 4.1
   service, and a test asserts both names are still there.
 - **JPMS.** All three published modules carry real descriptors:
-  `io.github.lightbatis.spring`, `io.github.lightbatis.spring.boot`,
-  `io.github.lightbatis.spring.boot.starter`.
+  `io.github.larkbatis.spring`, `io.github.larkbatis.spring.boot`,
+  `io.github.larkbatis.spring.boot.starter`.
 
 ### Known limitations
 
-- **One `DataSource`.** With more than one, declare a `SpringLightBatisSession`
+- **One `DataSource`.** With more than one, declare a `SpringLarkBatisSession`
   per `DataSource` and write the mapper `@Bean` methods yourself — mark one
   `@Primary`, or suppress the generated `@Configuration` with
-  `-Alightbatis.springConfig=false`. Per-mapper `DataSource` selection
-  (`@LightBatisDataSource`) is deliberately deferred: no design without a real
+  `-Alarkbatis.springConfig=false`. Per-mapper `DataSource` selection
+  (`@LarkBatisDataSource`) is deliberately deferred: no design without a real
   service that needs it.
 - **`log-sql` is absent**, though the design lists it. Every generated body would
   have to carry a logging branch, and the generated shape has none. SQL logging
@@ -103,5 +103,5 @@ and no `SqlSessionTemplate`.
 - **`ExecutorType.BATCH` has no equivalent.** There is no executor; a batch is a
   generated mapper method, explicit in the signature.
 
-[Unreleased]: https://github.com/lightbatis/lightbatis-spring/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/lightbatis/lightbatis-spring/releases/tag/v0.1.0
+[Unreleased]: https://github.com/larkbatis/larkbatis-spring/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/larkbatis/larkbatis-spring/releases/tag/v0.1.0
