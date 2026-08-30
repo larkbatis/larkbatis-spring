@@ -20,7 +20,7 @@ dependencies {
 // Maven Central still requires a javadoc artifact, so the jar carries a note
 // saying why it is empty instead of a doc tree that cannot exist.
 
-val javadocPlaceholder by tasks.registering {
+val javadocPlaceholder = tasks.register("javadocPlaceholder") {
     description = "A note explaining why this module's javadoc jar has no documentation in it"
     val outputFile = layout.buildDirectory.file("javadoc-placeholder/README.txt")
     outputs.file(outputFile)
