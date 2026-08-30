@@ -164,6 +164,34 @@ class SpringIntegrationTest {
         assertEquals(0, activeConnections(), "connections were not returned to the pool");
     }
 
+    // --- streams under Spring ---------------------------------------------------
+
+    @Test
+    void aStreamOutsideATransactionReturnsItsConnectionOnClose() {
+        service.open("streamed", new java.math.BigDecimal("1.00"));
+        assertEquals(0, activeConnections());
+        try (java.util.stream.Stream<Account> rows = accounts.streamAll()) {
+            assertEquals(1, activeConnections(), "the stream is not holding a connection");
+            assertEquals(1, rows.count());
+        }
+        assertEquals(0, activeConnections(), "closing the stream did not release the connection");
+    }
+
+    @Test
+    void aStreamInsideATransactionLeavesTheConnectionToTheTransaction() {
+        tx.executeWithoutResult(status -> {
+            jdbc.update("INSERT INTO account (owner, balance) VALUES (?, ?)", "tx-streamed", 2);
+            try (java.util.stream.Stream<Account> rows = accounts.streamAll()) {
+                // reads the transaction's own uncommitted write: same connection
+                assertEquals(1, rows.count());
+            }
+            // release() is a no-op here; the transaction still owns it
+            assertEquals(1, activeConnections());
+            status.setRollbackOnly();
+        });
+        assertEquals(0, activeConnections());
+    }
+
     // --- exception translation -------------------------------------------------
 
     @Test

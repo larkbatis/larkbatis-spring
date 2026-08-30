@@ -8,6 +8,7 @@ import io.github.lightbatis.annotations.Select;
 import io.github.lightbatis.annotations.Update;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * An ordinary mapper. Nothing here says "Spring": the generated
@@ -25,6 +26,15 @@ public interface AccountMapper {
 
     @Select("SELECT count(*) FROM account")
     int count();
+
+    /**
+     * A cursor under Spring: the stream holds a pooled Connection until it is
+     * closed, and {@code release} still goes through {@code DataSourceUtils} —
+     * so inside a transaction closing gives nothing back, and outside one it
+     * returns the connection to Hikari.
+     */
+    @Select("SELECT id, owner, balance FROM account ORDER BY id")
+    Stream<Account> streamAll();
 
     @Insert("INSERT INTO account (owner, balance) VALUES (#{owner}, #{balance})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")

@@ -72,6 +72,7 @@ a fragment whose value set is not bounded grows them without limit.
 | `REQUIRES_NEW`, `NESTED`, rollback rules | works | Spring handles all of it; LightBatis only asks for a connection |
 | `readOnly = true` | works | Spring sets the flag on that connection |
 | Mapper called outside any transaction | works | Auto-commit; `releaseConnection` closes it immediately |
+| A `Stream`-returning mapper method | works | The stream holds a pooled Connection until closed; inside a transaction `release` is a no-op and the transaction keeps it. `try (Stream<T> rows = ...)` either way |
 | Sharing a transaction with `JdbcTemplate` or JPA | works | Same `DataSourceUtils`, same `DataSourceTransactionManager` |
 | MyBatis `ExecutorType.BATCH` | absent | There is no executor. Batch is a generated mapper method, explicit in the signature (design §07) |
 | MyBatis plugins/interceptors | absent | Dropped in design §08. Spring AOP on a mapper bean still works — the mapper is a real bean |
