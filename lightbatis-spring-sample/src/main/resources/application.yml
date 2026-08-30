@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:lbspring;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+  sql:
+    init:
+      mode: always
+
+lightbatis:
+  # the trackVariants warning threshold; the sample has no ${} at all, so this
+  # is here to prove the property is bound, not because it does work
+  max-sql-variants: 32
+  fail-on-unbounded-fragment: true
