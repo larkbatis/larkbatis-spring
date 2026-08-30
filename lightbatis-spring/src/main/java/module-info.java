@@ -1,6 +1,6 @@
 /**
  * The Spring half of the integration: one {@code LightBatisSession} that
- * borrows its connections from {@code DataSourceUtils} (design §10).
+ * borrows its connections from {@code DataSourceUtils}.
  *
  * <p>Both {@code requires} are {@code transitive} because both appear in this
  * module's compile surface: the class implements

@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * no DataSource, with two of them, and when the application declares its own
  * beans. The two-DataSource case is the one that matters — a generator cannot
  * know which mapper belongs to which source, so backing off entirely is the
- * only honest answer (design §10, build plan M4).
+     * only honest answer (M4).
  */
 class LightBatisAutoConfigurationTest {
 

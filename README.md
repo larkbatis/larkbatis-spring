@@ -1,6 +1,6 @@
 # lightbatis-spring
 
-Spring / Spring Boot integration for LightBatis (design §10).
+Spring / Spring Boot integration for LightBatis.
 
 Half of `mybatis-spring` evaporates here, and knowing which half decides what this
 repo contains. `mybatis-spring` exists to solve exactly two problems:
@@ -74,8 +74,8 @@ a fragment whose value set is not bounded grows them without limit.
 | Mapper called outside any transaction | works | Auto-commit; `releaseConnection` closes it immediately |
 | A `Stream`-returning mapper method | works | The stream holds a pooled Connection until closed; inside a transaction `release` is a no-op and the transaction keeps it. `try (Stream<T> rows = ...)` either way |
 | Sharing a transaction with `JdbcTemplate` or JPA | works | Same `DataSourceUtils`, same `DataSourceTransactionManager` |
-| MyBatis `ExecutorType.BATCH` | absent | There is no executor. Batch is a generated mapper method, explicit in the signature (design §07) |
-| MyBatis plugins/interceptors | absent | Dropped in design §08. Spring AOP on a mapper bean still works — the mapper is a real bean |
+| MyBatis `ExecutorType.BATCH` | absent | There is no executor. Batch is a generated mapper method, explicit in the signature |
+| MyBatis plugins/interceptors | absent | Dropped in the design. Spring AOP on a mapper bean still works — the mapper is a real bean |
 
 ## Spring AOT and native image
 
@@ -115,7 +115,7 @@ failure with no symptom.
 ## Not implemented
 
 `log-sql` appears in the design doc's property list and is deliberately absent: every
-generated body would have to carry a logging branch, and the §04 generated shape has
+generated body would have to carry a logging branch, and the generated shape has
 none. SQL logging belongs to the driver or the pool (`net.ttddyy:datasource-proxy`,
 p6spy) until there is a reason to change that.
 

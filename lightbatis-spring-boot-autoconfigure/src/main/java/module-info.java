@@ -2,7 +2,7 @@
  * Boot auto-configuration. Two beans, two settings, and the
  * {@code AutoConfiguration.imports} resource that registers the class —
  * {@code spring.factories} has not been read for auto-configuration since
- * Boot 3 (design §10).
+ * Boot 3.
  *
  * <p>No {@code opens}: {@code @ConfigurationProperties} binding reflects over
  * {@code LightBatisProperties}, but the class and its setters are public in

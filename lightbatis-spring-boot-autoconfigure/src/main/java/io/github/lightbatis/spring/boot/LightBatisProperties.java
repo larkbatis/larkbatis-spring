@@ -3,7 +3,7 @@ package io.github.lightbatis.spring.boot;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * The {@code lightbatis.*} properties (design §10). Deliberately short: there
+ * The {@code lightbatis.*} properties. Deliberately short: there
  * is no runtime {@code Configuration} object to mirror, because everything
  * MyBatis configures at startup — type handlers, result maps, statement
  * shapes — was decided at build time.

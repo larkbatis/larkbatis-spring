@@ -15,7 +15,7 @@ import org.springframework.jdbc.support.SQLExceptionSubclassTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 
 /**
- * Two beans and two settings — the whole auto-configuration (design §10).
+ * Two beans and two settings — the whole auto-configuration.
  * {@code MybatisAutoConfiguration} needs a {@code SqlSessionFactoryBean}, a
  * {@code SqlSessionTemplate}, a {@code ConfigurationCustomizer} SPI and a
  * mapper scanner registrar; none of those has anything to configure here,
@@ -30,7 +30,7 @@ import org.springframework.jdbc.support.SQLExceptionTranslator;
  *
  * <p>{@code @AutoConfiguration} implies {@code proxyBeanMethods = false}, so
  * no CGLIB subclass of this class is built at runtime — the same reason the
- * generated mapper {@code @Configuration} spells it out (design §10).
+ * generated mapper {@code @Configuration} spells it out.
  *
  * <p>The ordering is declared by {@code afterName}, with both packages listed,
  * and that is not a style choice. Spring Boot 4 moved

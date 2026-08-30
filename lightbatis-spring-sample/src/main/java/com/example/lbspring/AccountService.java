@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
  * The point of the whole module: a service whose {@code @Transactional}
  * boundary the mapper joins without being told about it. LightBatis never
  * manages a transaction — it asks {@code DataSourceUtils} for a connection
- * and gets whichever one Spring already bound (design §10).
+ * and gets whichever one Spring already bound.
  */
 @Service
 public class AccountService {

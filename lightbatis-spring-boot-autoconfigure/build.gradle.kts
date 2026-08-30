@@ -1,6 +1,9 @@
 // LightBatisAutoConfiguration + LightBatisProperties + AutoConfiguration.imports.
 // Kept separate from the starter per Spring Boot guidance: autoconfigure carries
-// code, the starter only carries dependencies (design §10).
+// code, the starter only carries dependencies.
+
+description = "Spring Boot auto-configuration for LightBatis — supplies the LightBatisSession the generated @Configuration asks for"
+
 dependencies {
     api(project(":lightbatis-spring"))
     api("org.springframework.boot:spring-boot-autoconfigure:3.3.5")

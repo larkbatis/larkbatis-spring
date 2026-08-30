@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Design §10, checked against a running context. The interesting assertions
+ * The Spring integration, checked against a running context. The interesting
  * are not "the query works" but "the mapper is on the same connection Spring
  * is" — everything mybatis-spring's {@code SqlSessionTemplate} and
  * {@code SpringManagedTransaction} exist to arrange.

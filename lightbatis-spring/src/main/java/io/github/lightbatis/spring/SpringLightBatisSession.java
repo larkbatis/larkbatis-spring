@@ -12,7 +12,7 @@ import org.springframework.jdbc.support.SQLExceptionSubclassTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 
 /**
- * The whole of the Spring integration (design §10). Half of
+ * The whole of the Spring integration. Half of
  * {@code mybatis-spring} evaporates because a mapper is a real class with a
  * constructor — no scanner, no {@code MapperFactoryBean}, no
  * {@code SqlSessionTemplate}. What is left is the half that never evaporates:
