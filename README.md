@@ -19,10 +19,10 @@ this repo's whole content.
 
 | Module | Role |
 |---|---|
-| `lightbatis-spring` | `SpringLightBatisSession` — Connections via `DataSourceUtils`, exception translation via `SQLExceptionTranslator` |
-| `lightbatis-spring-boot-autoconfigure` | `LightBatisAutoConfiguration`, `LightBatisProperties`, `AutoConfiguration.imports` |
-| `lightbatis-spring-boot-starter` | Empty — dependencies only |
-| `lightbatis-spring-sample` | Not published: a real Boot context on H2 that proves the claims above |
+| [`lightbatis-spring`](lightbatis-spring/README.md) | `SpringLightBatisSession` — Connections via `DataSourceUtils`, exception translation via `SQLExceptionTranslator` |
+| [`lightbatis-spring-boot-autoconfigure`](lightbatis-spring-boot-autoconfigure/README.md) | `LightBatisAutoConfiguration`, `LightBatisProperties`, `AutoConfiguration.imports` |
+| [`lightbatis-spring-boot-starter`](lightbatis-spring-boot-starter/README.md) | Empty — dependencies only |
+| [`lightbatis-spring-sample`](lightbatis-spring-sample/README.md) | Not published: a real Boot context on H2 that proves the claims above |
 
 ## Using it
 
