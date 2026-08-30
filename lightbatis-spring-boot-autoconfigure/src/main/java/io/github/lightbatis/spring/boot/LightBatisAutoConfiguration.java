@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.support.SQLExceptionSubclassTranslator;
@@ -32,8 +31,22 @@ import org.springframework.jdbc.support.SQLExceptionTranslator;
  * <p>{@code @AutoConfiguration} implies {@code proxyBeanMethods = false}, so
  * no CGLIB subclass of this class is built at runtime — the same reason the
  * generated mapper {@code @Configuration} spells it out (design §10).
+ *
+ * <p>The ordering is declared by {@code afterName}, with both packages listed,
+ * and that is not a style choice. Spring Boot 4 moved
+ * {@code DataSourceAutoConfiguration} out of {@code spring-boot-autoconfigure}
+ * into the {@code spring-boot-jdbc} module and renamed its package; a
+ * {@code after = DataSourceAutoConfiguration.class} compiled against Boot 3
+ * cannot be resolved on Boot 4, and Spring's response is to drop this whole
+ * class from the candidate list — no bean, no warning, no failure until
+ * something asks for a {@code LightBatisSession}. A name that matches nothing
+ * is simply ignored, so listing both is what makes one jar work on both.
  */
-@AutoConfiguration(after = DataSourceAutoConfiguration.class)
+@AutoConfiguration(afterName = {
+        // Boot 4: spring-boot-jdbc
+        "org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration",
+        // Boot 3: spring-boot-autoconfigure
+        "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration"})
 @ConditionalOnClass({DataSource.class, LightBatisSession.class})
 @ConditionalOnSingleCandidate(DataSource.class)
 @EnableConfigurationProperties(LightBatisProperties.class)

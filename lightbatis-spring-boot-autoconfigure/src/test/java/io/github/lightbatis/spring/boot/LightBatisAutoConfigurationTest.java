@@ -5,6 +5,7 @@ import io.github.lightbatis.spring.SpringLightBatisSession;
 import javax.sql.DataSource;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,31 @@ class LightBatisAutoConfigurationTest {
 
     private final ApplicationContextRunner runner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(LightBatisAutoConfiguration.class));
+
+    /**
+     * A regression guard for a failure with no symptom. Spring Boot 4 moved
+     * {@code DataSourceAutoConfiguration} from {@code spring-boot-autoconfigure}
+     * into the {@code spring-boot-jdbc} module and renamed its package. An
+     * {@code after = DataSourceAutoConfiguration.class} compiled against Boot 3
+     * cannot be resolved on Boot 4, and Spring's response is to drop this whole
+     * class from the candidate list — no bean, no warning, nothing until an
+     * application asks for a {@code LightBatisSession} and gets
+     * NoSuchBeanDefinitionException at startup.
+     *
+     * <p>Found by migrating a real Boot 4.1 service. Naming both packages is
+     * what makes one jar work on both; a name that matches nothing is ignored.
+     */
+    @Test
+    void ordersItselfAfterDataSourceOnBothBootGenerations() {
+        AutoConfiguration annotation =
+                LightBatisAutoConfiguration.class.getAnnotation(AutoConfiguration.class);
+        assertThat(annotation.after())
+                .as("a Class reference here is unresolvable on the other Boot generation")
+                .isEmpty();
+        assertThat(annotation.afterName()).containsExactlyInAnyOrder(
+                "org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration",
+                "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration");
+    }
 
     @Test
     void contributesASessionForASingleDataSource() {

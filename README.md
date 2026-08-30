@@ -88,6 +88,30 @@ the bean type is only known at runtime and what it returns is a JDK proxy.
 the default `true` makes Spring build a CGLIB subclass of that class at runtime, which is
 exactly the runtime bytecode generation this project exists to remove.
 
+## Spring Boot 3 and Spring Boot 4
+
+One jar works on both, and that took one deliberate decision. Boot 4 moved
+`DataSourceAutoConfiguration` out of `spring-boot-autoconfigure` into the new
+`spring-boot-jdbc` module and renamed its package:
+
+| | Boot 3 | Boot 4 |
+|---|---|---|
+| `DataSourceAutoConfiguration` | `org.springframework.boot.autoconfigure.jdbc` | `org.springframework.boot.jdbc.autoconfigure` |
+| `@AutoConfiguration`, `@ConditionalOn*` | `org.springframework.boot.autoconfigure(.condition)` | unchanged |
+| `@ConfigurationProperties` | `org.springframework.boot.context.properties` | unchanged |
+
+So `LightBatisAutoConfiguration` declares its ordering with `afterName` and
+lists **both** package names. This is not style. A `after =
+DataSourceAutoConfiguration.class` compiled against Boot 3 cannot be resolved
+on Boot 4, and Spring's response is to drop the whole auto-configuration from
+the candidate list — no bean, no warning, and nothing goes wrong until
+something asks for a `LightBatisSession` and the context fails to start. A name
+that matches nothing is simply ignored, which is what makes listing both safe.
+
+Verified by migrating a real Boot 4.1 service; a test asserts both names are
+still there, because "simplifying" it back to a class reference reintroduces a
+failure with no symptom.
+
 ## Not implemented
 
 `log-sql` appears in the design doc's property list and is deliberately absent: every
