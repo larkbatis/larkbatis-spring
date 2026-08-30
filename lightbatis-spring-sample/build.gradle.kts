@@ -1,8 +1,8 @@
-// The Spring integration end to end (M4): a real javac run
-// through the annotation processor, a real Spring Boot context, a real H2
-// database. The claims of the design — mappers are ordinary beans, the
-// generated @Configuration replaces @MapperScan, and conn() joins whatever
-// transaction is running — are only worth as much as this module proves.
+// The Spring integration end to end: a real javac run through the annotation
+// processor, a real Spring Boot context, a real H2 database. Three claims —
+// mappers are ordinary beans, the generated @Configuration replaces
+// @MapperScan, and conn() joins whatever transaction is running — are only
+// worth as much as this module proves.
 //
 // Never published; the starter is consumed here exactly as an application
 // would consume it.

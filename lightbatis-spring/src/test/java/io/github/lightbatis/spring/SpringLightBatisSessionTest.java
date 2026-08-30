@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * The session on its own, without a Spring Boot context: the two behaviours
  * a generated body depends on (a connection that joins the transaction, a
- * release that does not close it) and the one the design doc leaves implicit
- * — what happens when the translator recognises nothing.
+ * release that does not close it) and the one nothing else pins down — what
+ * happens when the translator recognises nothing.
  */
 class SpringLightBatisSessionTest {
 

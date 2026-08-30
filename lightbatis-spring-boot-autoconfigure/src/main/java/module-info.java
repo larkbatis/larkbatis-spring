@@ -8,7 +8,7 @@
  * {@code LightBatisProperties}, but the class and its setters are public in
  * an exported package, which is all the binder needs. If a future property
  * type ever forces an {@code opens}, that is Spring's container reflecting —
- * never LightBatis, which reflects nowhere (red line #2).
+ * never LightBatis, which reflects nowhere.
  *
  * <p>The {@code spring.*} names are automatic modules read from each jar's
  * {@code Automatic-Module-Name}; re-check them with
