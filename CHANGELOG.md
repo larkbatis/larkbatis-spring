@@ -10,6 +10,17 @@ section here does not get released.
 
 ## [Unreleased]
 
+### Added
+
+- **`larkbatis-spring-boot-autoconfigure` ships
+  `META-INF/spring-configuration-metadata.json`.** An IDE now completes
+  `larkbatis.max-sql-variants` and `larkbatis.fail-on-unbounded-fragment` in
+  `application.yml`, shows their defaults and descriptions, and marks a
+  misspelt key instead of ignoring it. The properties always worked; they just
+  read as unknown in every editor, which is the kind of gap nobody notices from
+  inside the build. Produced by `spring-boot-configuration-processor`, and
+  guarded by a test that reads the file back off the classpath.
+
 ## [0.1.0] - 2026-08-30
 
 First public release.

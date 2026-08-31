@@ -12,6 +12,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * {@code ${}}: how many distinct SQL texts one statement may produce before
  * LarkBatis says something, and whether saying something means a warning or
  * a failure.
+ *
+ * <p>The javadoc on each field has a second reader: Spring Boot's
+ * configuration processor copies it verbatim into
+ * {@code META-INF/spring-configuration-metadata.json}, which is the text an
+ * IDE shows while completing {@code larkbatis.} in {@code application.yml}.
+ * Inline javadoc tags survive that copy as their own source text, so these
+ * two comments are written without them.
  */
 @ConfigurationProperties("larkbatis")
 public class LarkBatisProperties {
@@ -24,9 +31,9 @@ public class LarkBatisProperties {
     private int maxSqlVariants = 64;
 
     /**
-     * Whether crossing {@code max-sql-variants} throws instead of logging a
-     * warning once. Off by default; a test or staging profile is where
-     * turning it on finds the unbounded fragment before it ships.
+     * Whether crossing max-sql-variants throws instead of logging a warning
+     * once. Off by default; a test or staging profile is where turning it on
+     * finds the unbounded fragment before it ships.
      */
     private boolean failOnUnboundedFragment;
 
