@@ -4,3 +4,7 @@ out/
 .idea/
 *.iml
 .DS_Store
+larkbatis-spring-sample/bin
+larkbatis-spring-boot-starter/bin
+larkbatis-spring-boot-autoconfigure/bin
+larkbatis-spring/bin
